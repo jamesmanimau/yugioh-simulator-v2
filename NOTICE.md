@@ -35,10 +35,10 @@ redistributable.
 | jQuery UI 1.12.1 (`js/jquery-ui.min.js`) | MIT |
 | jQuery UI Touch Punch 0.2.3 | MIT |
 | Bootstrap 5 (CSS, `vendor/`) | MIT |
+| Font Awesome **Pro** 5.10 (local css + webfonts/, vendored upstream) | Commercial license — flagged as an IP risk for the owner (ADR-002) |
 | Animate.css 4.1.1 | MIT |
-| SweetAlert2 `@11` (CDN, jsdelivr) | MIT |
+| SweetAlert2 11.26.25 (`vendor/sweetalert2/`) | MIT |
 | Iconify (`js/iconify.min.js`) | Apache-2.0 / GPL dual — see file header |
-| Font Awesome 5.10 (CDN + local css) | Icons CC BY 4.0, code MIT, fonts SIL OFL |
 
 Intentionally **not** used (AGPL-3, blocked by ADR-002 until owner approval):
 EDOPro / ocgcore, Project Ignis CardScripts, WindBot (used as an architecture

@@ -2878,12 +2878,17 @@ function wv_showError(msg) {
 $(document).ready(function () {
     const isDebug = urlParams.get('debug');
 
-    // --- Load a saved board state from the local board.json file ---------------
+    // --- Load the sample board state ---------------------------------------------
     // board.json is a full board export (items + playLogData) produced by
     // board.exportState(). We restore it with importState(), which also brings
     // back the recorded combo (so it can be replayed and shown in the combo
     // graph). importState() itself triggers the combo-graph refresh.
-    $.getJSON('board.json', function (state) {
+    //
+    // file:// cannot XHR board.json (browsers block it), so js/board-state.js
+    // (regenerated from board.json by tools/sync-board-state.js) embeds the
+    // same state as a plain <script> tag. On http(s) the JSON file stays the
+    // live source. See docs/duel-mode/ASSUMPTION-AUDIT.md item 20.
+    var initBoard = function (state) {
         board = new Board($('#playtest'), state.items, {
             isDebug: isDebug,
             skill: (state.skill && state.skill.name) || "",
@@ -2891,9 +2896,16 @@ $(document).ready(function () {
         board.importState(state);
         // Show a random visible card in the info panel right away.
         board.showRandomCardInfo();
-    }).fail(function () {
-        wv_showError('Get board.json data failed');
-    });
+    };
+    if (window.__BOARD_STATE__ && location.protocol === 'file:') {
+        initBoard(window.__BOARD_STATE__);
+    } else {
+        $.getJSON('board.json', function (state) {
+            initBoard(state);
+        }).fail(function () {
+            wv_showError('Get board.json data failed');
+        });
+    }
 
     // --- Original: load the sample deck from the live API ----------------------
     // Kept on purpose. If you'd rather fetch the deck from the API than load the

@@ -35,7 +35,7 @@ A standalone, browser-based YuGi-Oh! card game simulator. No build step, no serv
 
 **Purpose:** Visual tool for recording combos, creating tournament coverage demos, and sharing board states. It does **not** enforce card legality or game rules.
 
-**Tech stack:** HTML5 + CSS3 + Vanilla JS + jQuery 3.2.1 + jQuery UI 1.12.1
+**Tech stack:** HTML5 + CSS3 + Vanilla JS + jQuery 3.7.1 + jQuery UI 1.12.1
 
 ---
 
@@ -50,7 +50,11 @@ yugioh-simulator/
 │   ├── main.js             ← DOM ready + Board initialization (65 lines)
 │   ├── Function.js         ← Utility functions: clipboard, localStorage, toasts (449 lines)
 │   ├── theme.js            ← Runtime theme switching (1,754 lines)
-│   └── example.js          ← Sample deck data as JSON (30,644 lines)
+│   ├── example.js          ← DEAD legacy data: single-line JSON, loaded nowhere (see docs/duel-mode/ASSUMPTION-AUDIT.md #15)
+│   ├── lib/state-guards.js ← Pure escapeHtml + importState validation (Node-testable)
+│   └── board-state.js      ← Generated from board.json (tools/sync-board-state.js); board boots on file://
+├── tools/                  ← Node scripts (no npm): sync-board-state.js, future data pipeline
+├── tests/                  ← node --test suites (no npm, ADR-006)
 ├── css/
 │   ├── simulator.css       ← Game board and card layout
 │   ├── theme.css           ← CSS variables for color theming
@@ -464,6 +468,8 @@ const state = board.exportState('json');
 
 ```javascript
 board.importState(jsonStringOrObject)
+// 0. StateGuards.validateBoardState() gate: size (<=10MB), item count (<=2000),
+//    required fields + enum checks (position/foldState/switchState). Throws on violation.
 // 1. board.emptyBoard()
 // 2. Parse JSON if string
 // 3. Validate items[]
@@ -627,17 +633,18 @@ User right-clicks Xyz monster → selects "Overlay"
 
 | Library | Version | Purpose | Load Location |
 |---------|---------|---------|--------------|
-| jQuery | 3.2.1 | DOM, events, animation | `index.html` head |
-| jQuery UI | 1.12.1 | Drag-drop, dialogs | `index.html` head |
-| jQuery UI Touch Punch | latest | Mobile touch drag | `index.html` head |
-| Bootstrap | 5 | Grid layout (CSS only) | `vendor/` |
-| Font Awesome | 5.10 | Icons | CDN |
-| Animate.css | 4.1.1 | Card effect animations | CDN |
-| SweetAlert2 | latest | Toast notifications | CDN |
-| Iconify | latest | Icon library | CDN |
+| jQuery | 3.7.1 | DOM, events, animation | `js/jquery.min.js` (self-hosted) |
+| jQuery UI | 1.12.1 | Drag-drop, dialogs | `js/jquery-ui.min.js` (self-hosted) |
+| jQuery UI Touch Punch | 0.2.3 | Mobile touch drag | `js/jquery.ui.touch-punch.min.js` (self-hosted) |
+| Bootstrap | 5 | Grid layout (CSS only) | `vendor/` (self-hosted) |
+| Font Awesome | Pro 5.10 | Icons | `css/fontawesome.css` + `webfonts/` (self-hosted; see NOTICE.md re: Pro license) |
+| Animate.css | 4.1.1 | Card effect animations | `css/animate.min.css` (self-hosted) |
+| SweetAlert2 | 11.26.25 | Toast notifications | `vendor/sweetalert2/` (pinned, self-hosted) |
+| Iconify | 1.0.7 (v2 lib) | Icon library | `js/iconify.min.js` (self-hosted) |
+| Google Fonts (Poppins/Rubik) | latest | Typography | CDN — **documented exception**, deferred to Tahap 5 PWA work |
 
-Card images load from external CDN: `ygovietnamcdn.azureedge.net`  
-Fallback: `asset/card/{cardId}.jpeg`
+Card images load from external CDN: `ygovietnamcdn.azureedge.net` (cardId-keyed `.jpg`)  
+Local fallback: `asset/card/{card name}.jpeg` — **name-keyed**, not cardId (audit #9), only 8 files present.
 
 ---
 

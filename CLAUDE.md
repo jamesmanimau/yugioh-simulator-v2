@@ -16,7 +16,9 @@ A standalone, browser-based YuGi-Oh! card game simulator. No build step — open
 | `js/Function.js` | Utility functions: clipboard, localStorage, SweetAlert toasts |
 | `js/combo_graph.js` | `ComboGraph` — read-only visual flow graph of a recorded combo |
 | `js/theme.js` | Runtime theme switching (1,754 lines) |
-| `js/example.js` | Sample deck JSON (30,644 lines — do not edit manually) |
+| `js/example.js` | **Dead legacy data** — single-line JSON export, loaded nowhere; don't edit or reference it |
+| `js/lib/state-guards.js` | Pure guards: `StateGuards.escapeHtml` (log HTML safety) + `validateBoardState` (importState hardening) |
+| `js/board-state.js` | Generated from `board.json` by `tools/sync-board-state.js`; lets the board boot on `file://` (no XHR needed) |
 | `css/simulator.css` | Game board and card layout |
 | `css/combo_graph.css` | Combo graph nodes, arrows, zone chips |
 | `css/theme.css` | CSS color variables — all colors go here |
