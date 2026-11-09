@@ -133,3 +133,9 @@ jQuery UI Touch Punch (`js/jquery.ui.touch-punch.min.js`) enables drag-drop on t
 ## Documentation
 
 **Update documentation after every bug fix or feature change.** Update `docs/ARCHITECTURE.md`, the matching `.claude/app-knowledge/` file(s), and the corresponding `docs/combo-knowledge-pack/` file(s). See the mapping table in `.claude/agents/game-engine-developer/skill.md`.
+
+## Duel Mode context (added)
+
+- Duel Mode UI lives in `js/duel/ui/` and renders **events only** (law 4, `docs/duel-mode/RULES.md`) — it never reuses legacy `Card.appendToBoard`/`moveTo` timing (ghost-card risk, audit #14).
+- Read `docs/duel-mode/DESIGN.md` before any duel UI work: mirror board, shared EMZ, Prompt Manager, portrait-first layout, theme.css variables only.
+- Free Mode visual behavior must not change.

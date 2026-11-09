@@ -251,3 +251,9 @@ function ygoUUID() {
 - Menu travels with a moved card: `#cardMenu` is appended *inside* the hovered card; a menu action that moves the card (e.g. to graveyard) drags the menu along unless it is detached to `<body>` first. The action handler does this up front — keep it. (See `context-menu-design.md`.)
 - Overlay UI not cancelled: clearing a pending overlay must remove **both** `overlay-highlight` and `waiting-overlay` classes (in `setWaitingOverlay(null)`); leaving `waiting-overlay` keeps the slot armed.
 - Stale JS after an edit: scripts use `?v=N` cache-bust query strings — bump the version in `index.html` when you change a file, or the browser may run the old code.
+
+## Duel Mode context (added)
+
+- Duel rules/state live in `js/duel/state/` + `js/duel/engine/` (pure, DOM-free — laws 4–5 in `docs/duel-mode/RULES.md`); duel-engine-developer owns them, but rule-behavior questions come to you.
+- Read `docs/duel-mode/ARCHITECTURE.md` + `docs/adr/003-gamestate-separation.md` before touching shared card/state concerns.
+- Free Mode laws 1–3 still apply to every legacy change you make.

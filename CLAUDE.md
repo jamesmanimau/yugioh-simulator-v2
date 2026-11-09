@@ -47,7 +47,7 @@ Board     → central controller: holds all cards, delegates to Card + Collectio
 
 ## Agile Team Agents
 
-This project has custom agents for each team role. Each role lives in its own folder under `.claude/agents/<role>/skill.md`.
+This project has custom agents for each team role. Each role lives in its own folder under `.claude/agents/<role>/skill.md`. Thin OpenCode wrappers live in `.opencode/agents/` (they just point at the `.claude` role spec).
 
 | Agent | Folder | Use When |
 |-------|--------|----------|
@@ -56,6 +56,18 @@ This project has custom agents for each team role. Each role lives in its own fo
 | `game-engine-developer` | `.claude/agents/game-engine-developer/` | simulator.js, card_menu.js, replay, state |
 | `qa-engineer` | `.claude/agents/qa-engineer/` | Bug reports, test checklists, regression |
 | `scrum-master` | `.claude/agents/scrum-master/` | Sprint planning, task breakdown, blockers |
+| `data-pipeline-engineer` | `.claude/agents/data-pipeline-engineer/` | tools/, card schema, IndexedDB cache, image strategy |
+| `duel-engine-developer` | `.claude/agents/duel-engine-developer/` | js/duel/engine, Worker, prompt/response protocol, replay |
+| `bot-developer` | `.claude/agents/bot-developer/` | js/duel/bot — executors, selectors, battle, chain, levels |
+| `browser-platform-engineer` | `.claude/agents/browser-platform-engineer/` | PWA/offline, CSP, import validation, Pointer Events, CDN pinning, budgets |
+
+## Duel Mode (in planning)
+
+Duel Mode = bot duels with engine-enforced rules, alongside the rule-free Free Mode. All planning docs live in **`docs/duel-mode/`** (PRD, ARCHITECTURE, DESIGN, RULES, TASKS, MEMORY, variables.md, ASSUMPTION-AUDIT.md) and decisions in `docs/adr/`. **`docs/duel-mode/RULES.md` and `MEMORY.md` are loaded every session.**
+
+Two additional laws for Duel Mode (beyond the Three Laws below):
+4. **GameState/engine is the single source of truth** — the UI only renders events; the engine never touches the DOM.
+5. **The bot never touches the DOM and never reads hidden information** — it answers normalized prompts from a redacted public view.
 
 ## App Knowledge
 

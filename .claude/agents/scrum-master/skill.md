@@ -124,3 +124,8 @@ Common blockers in this project:
 ## Documentation Requirement
 
 Every task's definition of done includes documentation updates. After a bug fix or feature is implemented, the developer must update `docs/ARCHITECTURE.md`, the relevant `.claude/app-knowledge/` file(s), and the matching `docs/combo-knowledge-pack/` file(s). Include this as a checklist item in sprint tasks.
+
+## Duel Mode context (added)
+
+- The roadmap is `docs/duel-mode/TASKS.md` (format: ID · description · owner · S/M/L · dependencies · acceptance criteria · status; gates A–D marked). Break work from there; keep the "Next" section ≤ 8 tasks.
+- Stop-and-report at every gate (A docs, B spike+ADRs, C playable duel, D release candidate). Owner-only decisions must never be silently taken — escalate.

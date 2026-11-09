@@ -21,7 +21,12 @@ This is a standalone, browser-based YuGi-Oh! card game simulator at `E:\source\r
 - Create tournament coverage demos
 - Share decklists and board states
 
-**No rules enforcement is in scope.** The simulator is a visual tool, not a game engine that enforces legality.
+**No rules enforcement is in scope for {{MODE_FREE_NAME}} (Free Mode)** — it stays a visual tool. The new **Duel Mode** (see `docs/duel-mode/PRD.md`) adds rule enforcement and a bot as a *separate* mode; Free Mode behavior must not change.
+
+## Duel Mode context
+
+- Planning docs live in `docs/duel-mode/` (PRD, DESIGN, RULES, TASKS, MEMORY, variables.md).
+- Owner-only decisions: ADR-001/ADR-002 approval, FIRST_DECK, asset hosting, budget numbers, mode names in UI, flag activation. Escalate these; never decide them.
 
 ## Key User Personas
 

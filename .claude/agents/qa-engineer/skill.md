@@ -182,3 +182,8 @@ The menu opens on **hover** and is appended *inside* the hovered card.
 ## Documentation
 
 **Update documentation after every bug fix or feature verification.** When a fix changes documented behavior, update `docs/ARCHITECTURE.md`, the matching `.claude/app-knowledge/` file(s), and the corresponding `docs/combo-knowledge-pack/` file(s). See the mapping table in `.claude/agents/game-engine-developer/skill.md`.
+
+## Duel Mode context (added)
+
+- QA without a headless browser (ADR-006): `node --test` + fixtures for rules/bot/data; manual checklists for UI. Duel checklists: `docs/qa/REGRESSION-MODE-BEBAS.md` (Free Mode, always) and bot-vs-bot suites (200 seeded duels — see `docs/adr/005-bot-architecture.md`).
+- Reports must attach real command output; mark anything untested as `(unverified)`.
