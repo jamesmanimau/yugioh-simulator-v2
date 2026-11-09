@@ -59,6 +59,15 @@ async function ensureRaw(refresh) {
     return JSON.parse(text);
 }
 
+/**
+ * Unreleased/unknown cards come back from YGOPRODeck with an empty typeline
+ * (e.g. `typeline: [""]`, every stat null). They are not playable records.
+ */
+function isPlaceholder(record) {
+    if (!Array.isArray(record.typeline)) return false;
+    return record.typeline.every((entry) => String(entry ?? '').trim() === '');
+}
+
 function buildShards(list) {
     const shards = [];
     for (let i = 0; i < list.length; i += SHARD_SIZE) {
@@ -76,9 +85,16 @@ if (!raw || !Array.isArray(raw.data)) throw new Error('unexpected API response: 
 // Normalize everything; a single bad record must fail the run loudly.
 const cards = new Map();
 let skipped = 0;
+let placeholders = 0;
 for (const record of raw.data) {
     if (String(record.type ?? '').toLowerCase() === 'token') {
         skipped += 1; // tokens are not real deck cards
+        continue;
+    }
+    // Upstream sometimes ships unreleased cards as empty stubs (typeline [""],
+    // no stats). They cannot be played, so they never enter the shards.
+    if (isPlaceholder(record)) {
+        placeholders += 1;
         continue;
     }
     const card = normalizeCard(record);
@@ -110,4 +126,4 @@ fs.writeFileSync(path.join(DATA_DIR, 'manifest.json'), Buffer.from(manifest, 'ut
 
 const totalBytes = entries.reduce((sum, e) => sum + e.bytes, 0);
 console.log(`wrote ${entries.length} shards + manifest: ${list.length} cards, ` +
-    `~${(totalBytes / 1e6).toFixed(1)} MB total (${skipped} dupes skipped)`);
+    `~${(totalBytes / 1e6).toFixed(1)} MB total (${skipped} dupes, ${placeholders} placeholders skipped)`);
