@@ -82,10 +82,30 @@
   A), budgets measured, a11y basics, i18n ID/EN, docs, full regression. · browser-platform-engineer + qa-engineer · deps: 5-1 ·
   AC: first load ≤ {{BUDGET_FIRST_LOAD_MB}} MB compressed (measured); all checklists pass.
 
+## Progress (2026-11-09, branch `duel/stage0-foundation`)
+
+| ID | Status | Note |
+|----|--------|------|
+| 0A-1 | done (code) | Google Fonts = documented CDN exception (deferred to 5-2) |
+| 0A-2 | **done (code), AC pending** | needs browser regression run (drag/dialog/menu) |
+| 0A-3 | done | 27 node --test checks green incl. guards |
+| 0A-4 | **done (code), AC pending** | file:// fix shipped; needs browser confirmation |
+| 0A-5 | done | docs corrected |
+| 0B-1 | done | `js/duel/state/gamestate.mjs` (pure, Node-tested) |
+| 0B-2 | done | v2 schema + v1→v2 migration (`migrate-v1.mjs`); flag exists since step 6 |
+| 1-x | todo | Stage 1 next; ADR-001/002 decisions only needed before Stage 2 |
+
+**Remaining for Stage 0 sign-off:** one browser session to run
+`docs/qa/REGRESSION-MODE-BEBAS.md` (incl. file:// + jQuery 3.7.1 checks).
+
 ## Next (max 8)
 
-1. 0A-1 · 2. 0A-3 · 3. 0A-4 · 4. 0A-5 · 5. 0A-2 (after 0A-1) ·
-6. 0B-1 · 7. 0B-2 (after 0B-1) · 8. 1-1 (after 0A-5)
+1. Browser regression run (unblocks 0A-2/0A-4 sign-off)
+2. 1-1 — tools/ YGOPRODeck pipeline (shards + manifest)
+3. 1-2 — card schema v2 fields + IndexedDB cache
+4. 1-3 — image strategy (used-cards self-host)
+5. 2-1 — engine spike on a separate branch (prebuilt ocgcore WASM)
+6. Owner decisions: ADR-001, ADR-002, FIRST_DECK candidates
 
 **Gate A** is this planning set (steps 0–7). Owner decisions pending before
 Stage 2 can start: ADR-001, ADR-002, FIRST_DECK candidates.

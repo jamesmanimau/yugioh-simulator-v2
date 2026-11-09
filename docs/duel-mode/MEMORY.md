@@ -5,9 +5,9 @@
 
 ## Status
 
-- **Stage / step:** bootstrap complete (Langkah 0–7) · **Gate:** A — report delivered, awaiting owner approval
-- **Branch:** `main` (local only; nothing pushed, per RULES.md)
-- **Last commit:** 25d1cb3 (step 6 foundation) · Gate A series: c557cbc → d8695d3 → 20fd3ce → df868e8 → 05ee5f7 → 566b074 → 25d1cb3
+- **Stage / step:** Tahap 0 complete (0A-1..0A-5, 0B-1, 0B-2) · **Gate:** next = B (spike), Stage 1 data pipeline may start in parallel
+- **Branch:** `duel/stage0-foundation` (local only; nothing pushed, per RULES.md)
+- **Last commit:** see `git log --oneline -1` (Stage 0: 8a2b756, b5cddd5, + 0B)
 - **Duel Mode flag:** OFF (`js/duel/config.js`, off until Gate C)
 
 ## Decisions (ADR index)
@@ -34,8 +34,19 @@
 - 2026-11-09 — `moveTo` = 400 ms nested `setTimeout` + double
   `appendToBoard`; stale-card guard exists (`js/simulator.js:796-801`, `:1012-1019`). (audit #14)
 - 2026-11-09 — `board.json` loads via XHR and the Board is built only in its
-  callback ⇒ Free Mode likely fails to initialize on `file://` — task 0A-4,
-  manual browser test still needed. (audit #20) **(unverified)**
+  callback ⇒ Free Mode likely fails to initialize on `file://`. **Fixed in 0A-4**
+  (script-embedded `js/board-state.js` + `tools/sync-board-state.js`), but the
+  browser run is still **(unverified)** — no browser available this session.
+- 2026-11-09 — jQuery 3.2.1 → 3.7.1 (CVE fix, 0A-2) with jQuery UI 1.12.1 +
+  Touch Punch 0.2.3 kept. Compatibility **(unverified)** — browser regression
+  (docs/qa/REGRESSION-MODE-BEBAS.md) must run before Stage 0 counts as done.
+- 2026-11-09 — Font Awesome local copy is **Pro 5.10 (commercial license)** —
+  IP risk flagged to owner in NOTICE.md (ADR-002 input).
+- 2026-11-09 — Google Fonts (Poppins/Rubik) is the last CDN reference;
+  documented exception, deferred to Tahap 5 PWA work.
+- 2026-11-09 — GameState v2 invariant: `placeCard` on an already-placed card
+  throws (cards must never leak into two zones); found via self-review while
+  testing 0B-1 (`js/duel/state/gamestate.mjs`).
 
 ## Open items
 
