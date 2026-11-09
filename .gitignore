@@ -1,0 +1,9 @@
+# Local spike artifacts — never committed (ADR-001/002 prebuilt engine trials)
+.spike/
+
+# Node (tools/ and tests/ use only the built-in test runner; no installs)
+node_modules/
+
+# OS noise
+.DS_Store
+Thumbs.db
