@@ -5,9 +5,9 @@
 
 ## Status
 
-- **Stage / step:** bootstrap complete (Langkah 0–7) · **Gate:** A — awaiting owner approval
+- **Stage / step:** bootstrap complete (Langkah 0–7) · **Gate:** A — report delivered, awaiting owner approval
 - **Branch:** `main` (local only; nothing pushed, per RULES.md)
-- **Last commit:** see `git log --oneline -1` (Gate A commit series: c557cbc → step 7)
+- **Last commit:** 25d1cb3 (step 6 foundation) · Gate A series: c557cbc → d8695d3 → 20fd3ce → df868e8 → 05ee5f7 → 566b074 → 25d1cb3
 - **Duel Mode flag:** OFF (`js/duel/config.js`, off until Gate C)
 
 ## Decisions (ADR index)
