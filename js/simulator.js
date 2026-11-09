@@ -173,43 +173,43 @@ class PlayLog {
                             if (collection) {
                                 posName = collection.getName();
                             };
-                            message += `<p class="log-step" data-possition="${value}"> <span class="card-key">Move</span> card <span class="log-card-name" data-id="${card.uuid}">${card.name}</span> to <span class="new-state">${posName}</span> </p>`;
+                            message += `<p class="log-step" data-possition="${StateGuards.escapeHtml(value)}"> <span class="card-key">Move</span> card <span class="log-card-name" data-id="${card.uuid}">${StateGuards.escapeHtml(card.name)}</span> to <span class="new-state">${StateGuards.escapeHtml(posName)}</span> </p>`;
 
                             break;
                         case 'foldState':
-                            message += `<p class="log-step" data-foldState="${value}"> <span class="card-key">Flip</span> card <span class="log-card-name" data-id="${card.uuid}">${card.name}</span> to <span class="new-state">${value}</span> </p>`;
+                            message += `<p class="log-step" data-foldState="${value}"> <span class="card-key">Flip</span> card <span class="log-card-name" data-id="${card.uuid}">${StateGuards.escapeHtml(card.name)}</span> to <span class="new-state">${value}</span> </p>`;
 
                             break;
                         case 'switchState':
-                            message += `<p class="log-step" data-foldState="${value}"> <span class="card-key">Switch</span> card <span class="log-card-name" data-id="${card.uuid}">${card.name}</span> to <span class="new-state">${value}</span> </p>`;
+                            message += `<p class="log-step" data-foldState="${value}"> <span class="card-key">Switch</span> card <span class="log-card-name" data-id="${card.uuid}">${StateGuards.escapeHtml(card.name)}</span> to <span class="new-state">${value}</span> </p>`;
 
                             break;
                         default:
-                            message += `<p class="log-step ddescription" data-newValue="${value}> Change <span class="card-key">${key}</span> <span class="log-card-name" data-id="${card.uuid}">${card.name}</span> to <span class="new-state">${value}</span> </p>`;
+                            message += `<p class="log-step ddescription" data-newValue="${StateGuards.escapeHtml(value)}"> Change <span class="card-key">${StateGuards.escapeHtml(key)}</span> <span class="log-card-name" data-id="${card.uuid}">${StateGuards.escapeHtml(card.name)}</span> to <span class="new-state">${StateGuards.escapeHtml(value)}</span> </p>`;
                             break;
                     }
                 });
                 break;
 
             case 'overlay':
-                message += `<p class="log-step"> Overlay card <span class="log-card-name" data-id="${card.uuid}" data-order="${data.order}">${card.name}</span></p>`;
+                message += `<p class="log-step"> Overlay card <span class="log-card-name" data-id="${card.uuid}" data-order="${StateGuards.escapeHtml(data.order)}">${StateGuards.escapeHtml(card.name)}</span></p>`;
                 break;
 
             case 'detach':
-                message += `<p class="log-step"> Detach card <span class="log-card-name" data-id="${card.uuid}">${card.name}</span></p>`;
+                message += `<p class="log-step"> Detach card <span class="log-card-name" data-id="${card.uuid}">${StateGuards.escapeHtml(card.name)}</span></p>`;
                 break;
 
 
             case 'target':
-                message += `<p class="log-step"> Target card <span class="log-card-name" data-id="${card.uuid}">${card.name}</span></p>`;
+                message += `<p class="log-step"> Target card <span class="log-card-name" data-id="${card.uuid}">${StateGuards.escapeHtml(card.name)}</span></p>`;
                 break;
 
             case 'declare':
-                message += `<p class="log-step"> Declared effect of <span class="log-card-name" data-id="${card.uuid}">${card.name}</span></p>`;
+                message += `<p class="log-step"> Declared effect of <span class="log-card-name" data-id="${card.uuid}">${StateGuards.escapeHtml(card.name)}</span></p>`;
                 break;
 
             case 'reveal':
-                message += `<p class="log-step"> Reveal card <span class="log-card-name" data-id="${card.uuid}">${card.name}</span></p>`;
+                message += `<p class="log-step"> Reveal card <span class="log-card-name" data-id="${card.uuid}">${StateGuards.escapeHtml(card.name)}</span></p>`;
                 break;
 
             case 'shuffle':
@@ -231,7 +231,7 @@ class PlayLog {
 
             case 'active-skill':
                 var skill = board.getActiveSkill();
-                message += `<p class="log-step"> <span class="new-state"> Activate ${skill}</span> </p>`;
+                message += `<p class="log-step"> <span class="new-state"> Activate ${StateGuards.escapeHtml(skill)}</span> </p>`;
                 uuid = undefined;
                 break;
                 break;
@@ -2684,6 +2684,12 @@ class Board {
     }
     importState(state) {
         var board = this;
+        // Hardening (task 0A-3): reject malformed/oversized/untrusted payloads
+        // before any board rebuild happens. Throws like checkData() does.
+        var guard = StateGuards.validateBoardState(state);
+        if (!guard.ok) {
+            throw new Error('importState rejected: ' + guard.error);
+        }
         board.emptyBoard();
         board.playlog.reset();
         state = board.checkStateType(state);
