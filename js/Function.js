@@ -1,7 +1,9 @@
 ﻿function refeshPage() {
     window.location.href = window.location.href.replace(/#.*$/, '');
 }
-function scrollTo(id) {
+// Named scrollToId on purpose: a global scrollTo() replaces window.scrollTo and breaks
+// window.scrollTo(x, y) for every caller (ScrollBottom(), SweetAlert2, ...).
+function scrollToId(id) {
     if (id) {
         var elmnt = document.getElementById(`${id}`);
         elmnt.scrollIntoView();

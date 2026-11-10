@@ -426,7 +426,9 @@ class PlayLog {
             case 'declare':
             case 'reveal':
                 card[action]();
-                log.writeStep(step.message || `Update ${key} to ${value}`);
+                // Fallback for steps recorded without a message (same wording as PlayLog.writelog).
+                var fallbackLabel = { target: 'Target card', declare: 'Declared effect of', reveal: 'Reveal card' }[action];
+                log.writeStep(step.message || `<p class="log-step"> ${fallbackLabel} <span class="log-card-name" data-id="${card.uuid}">${StateGuards.escapeHtml(card.name)}</span></p>`);
                 break;
             case 'init': // Function này đã bị bỏ, sẽ remove ở version sau
                 console.warn(' This function is deprecated');
@@ -704,6 +706,20 @@ class Card {
             overlapCards = board.getItemsByCollectionOrder(_card.collection_order) :
             [];
 
+        // A move that fails half-way (no free slot / slot not found) must leave the
+        // card exactly as it was, otherwise exportState() would carry a corrupt
+        // position / collection_order. itemBefore is the snapshot taken by beforeMove().
+        var rollbackMove = function () {
+            var before = _card.itemBefore;
+            _card.position = before.position;
+            _card.collection_order = before.collection_order;
+            _card.switchState = before.switchState;
+            _card.foldState = before.foldState;
+            overlapCards.forEach(function (card) {
+                card.collection_order = before.collection_order;
+            });
+        };
+
         // Nếu oldPosition là hand thì lưu thẻ cha để remove
         var willRemove = [];
         if (oldPosition == 'hand') {
@@ -748,6 +764,7 @@ class Card {
                     board.checkOverlaySlot(order);
                 } else {
                     console.warn('No Space to move card');
+                    rollbackMove();
                     _card.endBoardAnimation(moveContainer);
                     return false;
                 }
@@ -774,6 +791,8 @@ class Card {
             // }
             if (!_card.appendToBoard()) {
                 console.warn('Not moved');
+                rollbackMove();
+                _card.updateHtml();
                 _card.endBoardAnimation(moveContainer);
                 return false;
             } else {
@@ -786,6 +805,11 @@ class Card {
             var oldCollection = _card.getBoard().getCollectionByPosition(_card.itemBefore.position);
             oldCollection && oldCollection.drawOnBoard();
 
+        } else {
+            // Blocked move (e.g. a non-Spell to the Field Zone, or no free slot): stop
+            // here. Falling through used to detach the hand card's wrapper div, log a
+            // phantom "update" step via afterMove() and call moveAnimation(undefined).
+            return false;
         }
         //1
         // Nếu oldPosition là hand thì xóa thẻ div cha
@@ -1162,7 +1186,10 @@ class Card {
         if (soundElm.length) {
             delay = delay || 100;
             setTimeout(function () {
-                soundElm[0].play();
+                // Browsers reject play() until the user has interacted with the page
+                // (autoplay policy); swallow it so it is not an unhandled rejection.
+                var playing = soundElm[0].play();
+                if (playing && typeof playing.catch === 'function') playing.catch(function () { });
             }, delay);
         }
     }
@@ -2078,7 +2105,10 @@ class Board {
         if (soundElm.length) {
             delay = delay || 100;
             setTimeout(function () {
-                soundElm[0].play();
+                // Browsers reject play() until the user has interacted with the page
+                // (autoplay policy); swallow it so it is not an unhandled rejection.
+                var playing = soundElm[0].play();
+                if (playing && typeof playing.catch === 'function') playing.catch(function () { });
             }, delay);
         }
     }
@@ -2776,7 +2806,7 @@ function parseDataFromOther(data) {
     var input = { ...data };
     if (typeof data == 'object' && 'mainDeck' in data && 'extraDeck' in data) {
         function mapkey(card) {
-            if ((! 'cardId' in card) && ('id' in card)) {
+            if (!('cardId' in card) && ('id' in card)) {
                 card.cardId = card.id;
             }
             var maps = {

@@ -383,7 +383,7 @@
     animation: border-dance 0.4s infinite linear;
 }
 .holder-slot.waiting-overlay, .holder-slot.waiting-overlay .simulator-card {
-    cursor: url("/asset/icon/pointer_overlay.png"), auto;
+    cursor: url("../asset/icon/pointer_overlay.png"), auto;
 }
 .holder-slot.overlay-slot .simulator-card {
     position: absolute;
